@@ -10,35 +10,28 @@
   <Overview>
 Sleep tight knowing your server never does.
 
-NAS Doctor is a local diagnostic and monitoring tool for your NAS. It runs periodic health checks — analyzing SMART data, disk usage, Docker containers, kernel logs, temperatures, ZFS pools, UPS power, tunnels, and Unraid parity — then presents findings in a beautiful web dashboard with actionable recommendations backed by Backblaze failure rate data.
+NAS Doctor is a local diagnostic and monitoring tool for your NAS. Beautiful dashboards, Prometheus metrics (90+ gauges), webhook alerts — no cloud account required. Multi-arch: amd64 + arm64.
 
 Features:
-- 20+ diagnostic rules with automatic root-cause correlation
-- SMART health with Backblaze failure-rate thresholds (337k+ drives)
+- 20+ diagnostic rules with Backblaze failure-rate thresholds (337k+ drives)
 - Service checks: HTTP, TCP, DNS, Ping/ICMP, SMB, NFS with per-check intervals
 - Tunnel monitoring: Cloudflared and Tailscale (host + Docker detection)
-- Historical trend sparklines (CPU, memory, I/O, drive temps)
-- ZFS pool health (vdev tree, scrub/resilver, ARC stats)
-- UPS / power monitoring (NUT and apcupsd)
-- Parity check speed trend analysis with full history page
-- 3 dashboard themes (Midnight, Clean, Ember)
-- Notification rules: 12 categories, dropdown-driven, one-click presets
+- Proxmox VE integration: nodes, VMs, LXCs, storage, HA, tasks via API
+- Kubernetes integration: nodes, pods, deployments, services, PVCs, events (k8s/k3s/EKS/GKE/AKS)
+- 3 dashboard themes (Midnight, Clean, Ember) with draggable sections
+- Notification rules: 12 categories, dropdown-driven builder, one-click presets
 - Log forwarding: Loki, syslog, HTTP JSON
-- Prometheus /metrics endpoint (80+ gauges)
+- API key authentication for fleet security
+- Multi-server fleet monitoring with auto-pairing and visual topology
 - Webhook alerts: Discord, Slack, Gotify, Ntfy, generic HTTP
-- Multi-server fleet monitoring with visual topology
 - Export professional diagnostic reports
-- Automatic DB backups with configurable schedule
   </Overview>
   <Category>Tools: Monitoring Status:Stable</Category>
   <WebUI>http://[IP]:[PORT:8060]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/mcdays94/docker-templates/main/nas-doctor/nas-doctor.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/mcdays94/nas-doctor/main/icons/icon3.png</Icon>
-  <ExtraParams/>
-  <PostArgs/>
   <DonateText>Buy Me a Coffee</DonateText>
   <DonateLink>https://buymeacoffee.com/miguelcaetanodias</DonateLink>
-  <Requires/>
   <Config Name="Web UI Port" Target="8060" Default="8060" Mode="tcp" Description="Web dashboard and API port" Type="Port" Display="always" Required="true" Mask="false">8060</Config>
   <Config Name="Data Directory" Target="/data" Default="/mnt/user/appdata/nas-doctor" Mode="rw" Description="Persistent data (SQLite database, config, backups)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/nas-doctor</Config>
   <Config Name="Boot Config" Target="/host/boot" Default="/boot" Mode="ro" Description="Unraid boot config (parity logs, ident)" Type="Path" Display="always" Required="false" Mask="false">/boot</Config>
