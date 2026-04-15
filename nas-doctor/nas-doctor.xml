@@ -13,18 +13,20 @@ Sleep tight knowing your server never does.
 NAS Doctor is a local diagnostic and monitoring tool for your NAS. Beautiful dashboards, Prometheus metrics (90+ gauges), webhook alerts — no cloud account required. Multi-arch: amd64 + arm64.
 
 Features:
-- 20+ diagnostic rules with Backblaze failure-rate thresholds (337k+ drives)
-- Service checks: HTTP, TCP, DNS, Ping/ICMP, SMB, NFS with per-check intervals
+- SMART health with Backblaze failure-rate thresholds (337k+ drives)
+- Drive replacement planner with health scoring, cost estimates, urgency classification
+- Per-container resource metrics (CPU, memory, network, block I/O) with history charts
+- GPU monitoring (Nvidia, AMD, Intel) with usage, temperature, VRAM, power charts
+- Backup monitoring (Borg, Restic, PBS, Duplicati) with stale/failed alerts
+- Network speed test with download/upload/latency history and speed service checks
+- Service checks: HTTP, TCP, DNS, Ping/ICMP, SMB, NFS, Speed with per-check intervals
 - Tunnel monitoring: Cloudflared and Tailscale (host + Docker detection)
-- Proxmox VE integration: nodes, VMs, LXCs, storage, HA, tasks via API
-- Kubernetes integration: nodes, pods, deployments, services, PVCs, events (k8s/k3s/EKS/GKE/AKS)
-- 3 dashboard themes (Midnight, Clean, Ember) with draggable sections
+- Proxmox VE and Kubernetes integration
+- 3 dashboard themes with draggable sections and configurable column layout (1-4 columns)
 - Notification rules: 12 categories, dropdown-driven builder, one-click presets
-- Log forwarding: Loki, syslog, HTTP JSON
-- API key authentication for fleet security
 - Multi-server fleet monitoring with auto-pairing and visual topology
 - Webhook alerts: Discord, Slack, Gotify, Ntfy, generic HTTP
-- Export professional diagnostic reports
+- Export professional diagnostic reports (16 sections)
   </Overview>
   <Category>Tools: Monitoring Status:Stable</Category>
   <WebUI>http://[IP]:[PORT:8060]</WebUI>
@@ -34,11 +36,14 @@ Features:
   <DonateLink>https://buymeacoffee.com/miguelcaetanodias</DonateLink>
   <Config Name="Web UI Port" Target="8060" Default="8060" Mode="tcp" Description="Web dashboard and API port" Type="Port" Display="always" Required="true" Mask="false">8060</Config>
   <Config Name="Data Directory" Target="/data" Default="/mnt/user/appdata/nas-doctor" Mode="rw" Description="Persistent data (SQLite database, config, backups)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/nas-doctor</Config>
-  <Config Name="Boot Config" Target="/host/boot" Default="/boot" Mode="ro" Description="Unraid boot config (parity logs, ident)" Type="Path" Display="always" Required="false" Mask="false">/boot</Config>
-  <Config Name="System Logs" Target="/host/log" Default="/var/log" Mode="ro" Description="System log files (syslog, messages)" Type="Path" Display="always" Required="false" Mask="false">/var/log</Config>
-  <Config Name="Unraid Version" Target="/etc/unraid-version" Default="/etc/unraid-version" Mode="ro" Description="Unraid version file (for OS update detection)" Type="Path" Display="always" Required="false" Mask="false">/etc/unraid-version</Config>
-  <Config Name="Host Mounts" Target="/host/mnt" Default="/mnt" Mode="ro" Description="Host disk mounts (for per-disk space monitoring)" Type="Path" Display="always" Required="false" Mask="false">/mnt</Config>
-  <Config Name="Docker Socket" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="ro" Description="Docker socket for container monitoring" Type="Path" Display="always" Required="false" Mask="false">/var/run/docker.sock</Config>
+  <Config Name="Docker Socket" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="ro" Description="Docker socket for container monitoring" Type="Path" Display="always" Required="true" Mask="false">/var/run/docker.sock</Config>
+  <Config Name="Host Mounts" Target="/host/mnt" Default="/mnt" Mode="ro" Description="Host disk mounts for per-disk space monitoring" Type="Path" Display="always" Required="true" Mask="false">/mnt</Config>
+  <Config Name="Boot Config" Target="/host/boot" Default="/boot" Mode="ro" Description="Unraid boot config (parity logs, identification)" Type="Path" Display="always" Required="true" Mask="false">/boot</Config>
+  <Config Name="System Logs" Target="/host/log" Default="/var/log" Mode="ro" Description="System log files (syslog, dmesg)" Type="Path" Display="always" Required="false" Mask="false">/var/log</Config>
+  <Config Name="Unraid Version" Target="/etc/unraid-version" Default="/etc/unraid-version" Mode="ro" Description="Unraid version file for OS update detection" Type="Path" Display="always" Required="false" Mask="false">/etc/unraid-version</Config>
+  <Config Name="Disk Slot Mapping" Target="/var/local/emhttp" Default="/var/local/emhttp" Mode="ro" Description="Unraid disk slot assignments for merged drive view (maps physical drives to array slots)" Type="Path" Display="always" Required="true" Mask="false">/var/local/emhttp</Config>
+  <Config Name="Device Access" Target="/dev" Default="/dev" Mode="ro" Description="Device nodes for SMART access" Type="Path" Display="always" Required="false" Mask="false">/dev</Config>
+  <Config Name="Sysfs" Target="/sys" Default="/sys" Mode="ro" Description="Sysfs for GPU telemetry and drive mapping" Type="Path" Display="always" Required="false" Mask="false">/sys</Config>
   <Config Name="Scan Interval" Target="NAS_DOCTOR_INTERVAL" Default="6h" Mode="" Description="How often to run diagnostic scans (e.g. 30m, 1h, 6h, 24h)" Type="Variable" Display="always" Required="false" Mask="false">6h</Config>
   <Config Name="Timezone" Target="TZ" Default="UTC" Mode="" Description="Container timezone (e.g. Europe/London, America/New_York)" Type="Variable" Display="always" Required="false" Mask="false">UTC</Config>
 </Container>
